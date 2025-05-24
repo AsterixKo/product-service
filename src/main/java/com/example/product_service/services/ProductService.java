@@ -22,6 +22,20 @@ public class ProductService {
         return productRepository.findAll();
     }
 
+    public void deleteProductById(Long idProduct) {
+        productRepository.deleteById(idProduct);
+    }
+
+    public Product findProductById(Long idProduct) {
+        Optional<Product> productOptional = productRepository.findById(idProduct);
+
+        if (productOptional.isPresent()) {
+            return productOptional.get();
+        } else {
+            return null;
+        }
+    }
+
     public Product saveProduct(Product product) throws ErrorSavingProductException {
         try {
             return productRepository.save(product);
@@ -45,6 +59,7 @@ public class ProductService {
         if (product.isPresent()) {
             Integer stock = product.get().getStock();
             product.get().setStock(stock - sale);
+            log.info("Guardando product");
             return productRepository.save(product.get());
         } else {
             log.error("Error product not found");
